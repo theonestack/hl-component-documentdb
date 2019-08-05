@@ -9,6 +9,8 @@ CfhighlanderTemplate do
     ComponentParam 'SubnetIds'
     ComponentParam 'Snapshot'
     ComponentParam 'InstanceType'
+    ComponentParam 'DnsDomain'
+    ComponentParam 'KmsKeyId' if defined? kms
   end
 
   LambdaFunctions 'ssm_custom_resources'
