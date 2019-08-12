@@ -50,8 +50,8 @@ CloudFormation do
 
   DocDB_DBCluster(:DocDBCluster) {
     DBSubnetGroupName Ref(:DocDBSubnetGroup)
-    # KmsKeyId Ref('KmsKeyId')
-    # StorageEncrypted false
+    KmsKeyId Ref('KmsKeyId') if defined? kms
+    StorageEncrypted storage_encrypted if defined? storage_encrypted
     VpcSecurityGroupIds [Ref(:DocDBSecurityGroup)]
     # If snapshot value is set in the parameter
     # SnapshotIdentifier FnIf('SnapshotSet', Ref('Snapshot'), Ref('AWS::NoValue'))
@@ -69,6 +69,14 @@ CloudFormation do
     DBClusterIdentifier Ref(:DocDBCluster)
     DBInstanceClass Ref('InstanceType')
     Tags([{ Key: 'Name', Value: FnSub("${EnvironmentName}-#{component_name}-instance-A")}] + tags)
+  }
+
+  Route53_RecordSet(:DBHostRecord) {
+    HostedZoneName FnJoin('', [ Ref('EnvironmentName'), '.', Ref('DnsDomain'), '.'])
+    Name FnJoin('', [ hostname, '.', Ref('EnvironmentName'), '.', Ref('DnsDomain'), '.' ])
+    Type 'CNAME'
+    TTL '60'
+    ResourceRecords [ FnGetAtt('DocDBCluster','Endpoint') ]
   }
 
 end

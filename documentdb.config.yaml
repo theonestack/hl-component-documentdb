@@ -3,6 +3,8 @@ master_credentials:
   ssm_path: "/documentdb/${EnvironmentName}"
   password_length: 32
 
+hostname: docdb
+
 # SSM Custom resource to create secret ssm parameter for master password
 ssm_custom_resources:
   custom_policies:
