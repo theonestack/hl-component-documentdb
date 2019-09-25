@@ -5,6 +5,15 @@ master_credentials:
 
 hostname: docdb
 
+# cluster_parameters:
+#   # These are the defaults provided by AWS
+#   audit_logs: disabled
+#   profiler: disabled
+#   profiler_sampling_rate: 1.0
+#   profiler_threshold_ms: 100
+#   tls: enabled
+#   ttl_monitor: enabled
+
 # SSM Custom resource to create secret ssm parameter for master password
 ssm_custom_resources:
   custom_policies:

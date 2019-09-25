@@ -49,6 +49,7 @@ CloudFormation do
   }
 
   DocDB_DBCluster(:DocDBCluster) {
+    DBClusterParameterGroupName Ref(:DocDBClusterParameterGroup) if defined?(cluster_parameters)
     DBSubnetGroupName Ref(:DocDBSubnetGroup)
     KmsKeyId Ref('KmsKeyId') if defined? kms
     StorageEncrypted storage_encrypted if defined? storage_encrypted
@@ -64,6 +65,16 @@ CloudFormation do
     # end
     Tags([{ Key: 'Name', Value: FnSub("${EnvironmentName}-#{component_name}-cluster")}] + tags)
   }
+
+  if defined?(cluster_parameters)
+    DocDB_DBClusterParameterGroup(:DocDBClusterParameterGroup) {
+      Description "Parameter group for the #{component_name} cluster"
+      Family 'docdb3.6'
+      Name FnSub("${EnvironmentName}-#{component_name}-cluster-parameter-group")
+      Parameters ''
+      Tags [{ Key: 'Name', Value: FnSub("${EnvironmentName}-#{component_name}-cluster-parameter-group")}] + tags
+    }
+  end
 
   DocDB_DBInstance(:DocDBInstanceA) {
     DBClusterIdentifier Ref(:DocDBCluster)
