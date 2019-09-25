@@ -71,7 +71,7 @@ CloudFormation do
       Description "Parameter group for the #{component_name} cluster"
       Family 'docdb3.6'
       Name FnSub("${EnvironmentName}-#{component_name}-cluster-parameter-group")
-      Parameters ''
+      Parameters cluster_parameters
       Tags [{ Key: 'Name', Value: FnSub("${EnvironmentName}-#{component_name}-cluster-parameter-group")}] + tags
     }
   end
