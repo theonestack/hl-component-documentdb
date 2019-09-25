@@ -90,4 +90,8 @@ CloudFormation do
     ResourceRecords [ FnGetAtt('DocDBCluster','Endpoint') ]
   }
 
+  Output(:DocDBSecurityGroup) {
+    Value Ref(:DocDBSecurityGroup)
+  }
+
 end
