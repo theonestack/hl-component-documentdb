@@ -49,6 +49,7 @@ CloudFormation do
   }
 
   DocDB_DBCluster(:DocDBCluster) {
+    DBClusterParameterGroupName Ref(:DocDBClusterParameterGroup) if defined?(cluster_parameters)
     DBSubnetGroupName Ref(:DocDBSubnetGroup)
     KmsKeyId Ref('KmsKeyId') if defined? kms
     StorageEncrypted storage_encrypted if defined? storage_encrypted
@@ -65,6 +66,16 @@ CloudFormation do
     Tags([{ Key: 'Name', Value: FnSub("${EnvironmentName}-#{component_name}-cluster")}] + tags)
   }
 
+  if defined?(cluster_parameters)
+    DocDB_DBClusterParameterGroup(:DocDBClusterParameterGroup) {
+      Description "Parameter group for the #{component_name} cluster"
+      Family 'docdb3.6'
+      Name FnSub("${EnvironmentName}-#{component_name}-cluster-parameter-group")
+      Parameters cluster_parameters
+      Tags [{ Key: 'Name', Value: FnSub("${EnvironmentName}-#{component_name}-cluster-parameter-group")}] + tags
+    }
+  end
+
   DocDB_DBInstance(:DocDBInstanceA) {
     DBClusterIdentifier Ref(:DocDBCluster)
     DBInstanceClass Ref('InstanceType')
@@ -77,6 +88,10 @@ CloudFormation do
     Type 'CNAME'
     TTL '60'
     ResourceRecords [ FnGetAtt('DocDBCluster','Endpoint') ]
+  }
+
+  Output(:DocDBSecurityGroup) {
+    Value Ref(:DocDBSecurityGroup)
   }
 
 end
