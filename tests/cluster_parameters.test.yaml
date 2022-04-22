@@ -1,0 +1,13 @@
+test_metadata:
+  type: config
+  name: cluster_parameters
+  description: override aws default cluster parameters
+
+cluster_parameters:
+  # These are the defaults provided by AWS
+  audit_logs: disabled
+  profiler: disabled
+  profiler_sampling_rate: 1.0
+  profiler_threshold_ms: 100
+  tls: enabled
+  ttl_monitor: enabled
